@@ -15,11 +15,16 @@
     <string-array name="bagian">
         <item>Tugas Akhir</item>
         <item>Program</item>
-        <item>Bisnis</item>
     </string-array>
 
-    <string-array name="durasi">
-        <item>1 Jam</item>
-        <item>2 Jam</item>
+    <string-array name="jam">
+         <item>Jam 9</item>
+         <item>Jam 10</item>
+         <item>Jam 11</item>
+         <item>Jam 12</item>
+         <item>Jam 13</item>
+         <item>Jam 14</item>
+         <item>Jam 15</item>
+         <item>Jam 16</item>
     </string-array>
 </resources>

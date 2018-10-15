@@ -61,6 +61,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Selasa, 16 Okt 2018" />
+            <LinearLayout
+                android:id="@+id/expand_view"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="#e9f9f9"
+                android:paddingLeft="10dp">
+                <TextView
+                    android:id="@+id/jadwal_jam_expandview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/nama_pembimbing_expandview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -72,11 +90,14 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Berapa lama?"/>
-            <Spinner
-                android:id="@+id/duration_time"
+                android:text="Detail Skripsi?"/>
+            <EditText
+                android:id="@+id/detail_skripsi"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:lines="3"
+                android:inputType="text|textMultiLine"
+                android:gravity="top"
                 android:spinnerMode="dropdown"/>
         </LinearLayout>
 

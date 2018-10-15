@@ -1,18 +1,24 @@
 package com.digitalcreative.warungskripsi.Boundary;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
 
+import com.digitalcreative.warungskripsi.Controllers.Adapters.List_Pembimbing_RecycleView;
+import com.digitalcreative.warungskripsi.ModelData.Pembimbing_Model;
 import com.digitalcreative.warungskripsi.R;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import static android.app.Activity.RESULT_OK;
@@ -21,9 +27,14 @@ import static android.app.Activity.RESULT_OK;
  * A simple {@link Fragment} subclass.
  */
 public class GetDate_BookingHere extends Fragment {
+    ArrayList<Pembimbing_Model> list =  new ArrayList<>();
+    List_Pembimbing_RecycleView listPembimbingRecycleView;
+    RecyclerView recyclerView;
     Button test;
-    String jam, pembimbing;
+    int subbidang, bagian;
     CalendarView calendarView;
+    Context context;
+    String getDate, getJam, getPembimbing;
 
     public GetDate_BookingHere() {
         // Required empty public constructor
@@ -35,36 +46,61 @@ public class GetDate_BookingHere extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_get_date__booking_here, container, false);
-        //Init
-        calendarView = view.findViewById(R.id.calendeView);
-        test = view.findViewById(R.id.test);
 
+        //Init
+        descTheComponent(view);
+
+        //getValue
+         getThisValue();
+
+        //Actions
         calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(@NonNull CalendarView calendarView, int year, int month, int day) {
                 //Ambil data tanggal bulan hari
-                String getDate = processDate(year, month+1, day);
-                String getJam = processJam();
+                getDate = processDate(year, month+1, day);
 
-                //Kirim data
-                sendTheData(getDate);
-            }
-        });
+                //Show list pembimbing
+                showNgetListPembimbing(getDate);
 
-        test.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-              //sendTheData();
             }
         });
         return view;
     }
 
-    private String processJam() {
-        
-        return null;
+    public void getThisValue() {
+        subbidang = getArguments().getInt("subidang_kirim");
+        bagian = getArguments().getInt("bagian_kirim");
+
+    }
+
+    private void showNgetListPembimbing(String getDate) {
+        String namaPembimng = "Udin";
+        String statusPembimbing = "3";
+
+            Pembimbing_Model model = new Pembimbing_Model();
+            model.setNamaPembimbing(namaPembimng);
+            model.setStatusPembimbing(statusPembimbing);
+            model.setTanggal(getDate);
+            model.setSubbidang(subbidang);
+            model.setBagian(bagian);
+            list.add(model);
+
+       recyclerView.setAdapter(listPembimbingRecycleView);
+
+    }
+
+    private void descTheComponent(View view) {
+        calendarView = view.findViewById(R.id.calendeView);
+        test = view.findViewById(R.id.test);
+        recyclerView = view.findViewById(R.id.recycler);
+        context = getActivity().getApplicationContext();
+
+        //Adapter Recycler
+        listPembimbingRecycleView = new List_Pembimbing_RecycleView(list, context);
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     private String processDate(int year, int i, int day) {
@@ -144,15 +180,4 @@ public class GetDate_BookingHere extends Fragment {
         }
         return hasil;
     }
-
-    private void sendTheData(String hari){
-        Intent intent = new Intent(getContext(), GetDate_BookingHere.class);
-        intent.putExtra("jam", jam);
-        intent.putExtra("tanggal", hari);
-        intent.putExtra("pembimbing", pembimbing);
-
-        getTargetFragment().onActivityResult(getTargetRequestCode(), RESULT_OK, intent);
-        getFragmentManager().popBackStack();
-    }
-
 }
