@@ -2,35 +2,39 @@ package com.digitalcreative.warungskripsi.Controllers.Adapters;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.digitalcreative.warungskripsi.Boundary.BookingHere;
-import com.digitalcreative.warungskripsi.ModelData.Pembimbing_Model;
+import com.digitalcreative.warungskripsi.ModelData.InformasiKonsultan;
+import com.digitalcreative.warungskripsi.ModelData.JadwalKonsultan;
+import com.digitalcreative.warungskripsi.ModelData.Konsultan;
 import com.digitalcreative.warungskripsi.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class List_Pembimbing_RecycleView extends RecyclerView.Adapter<List_Pembimbing_RecycleView.ViewHolder>{
-    List<Pembimbing_Model> list;
+    List<Konsultan> list;
+    List<String> sesi_list;
     Context context;
-    String nama_pembimbing, tanggal, getGetShowText_jam;
-    int bagian, subbidang;
+    String nama_pembimbing, tanggal, getGetShowText_jam, bagian, subbidang, id_konsultan;
+    int kuota;
 
-    public List_Pembimbing_RecycleView(ArrayList<Pembimbing_Model> list, Context c) {
+    public List_Pembimbing_RecycleView(ArrayList<Konsultan> list, List<String> sesi_list, Context c) {
         this.list = list;
+        this.sesi_list = sesi_list;
         this.context = c;
     }
 
@@ -44,16 +48,24 @@ public class List_Pembimbing_RecycleView extends RecyclerView.Adapter<List_Pembi
     @Override
     public void onBindViewHolder(@NonNull final List_Pembimbing_RecycleView.ViewHolder holder, int pos) {
         //init
-        final Pembimbing_Model model = list.get(pos);
-        nama_pembimbing = model.getNamaPembimbing();
-        tanggal = model.getTanggal();
-        subbidang = model.getSubbidang();
-        bagian = model.getBagian();
+        final Konsultan konsultan = list.get(pos);
+
+        InformasiKonsultan info = konsultan.getInformasi();
+        JadwalKonsultan jadwal = konsultan.getJadwal();
+
+        nama_pembimbing = info.getNama();
+        tanggal = jadwal.getTanggal();
+        subbidang = info.getSubbidang();
+        bagian = info.getBagian();
+
+        kuota = Math.abs(jadwal.getJadwal_akhir()-jadwal.getJadwal_awal());
 
         //set
         holder.namaPembimbing.setText(nama_pembimbing);
-        holder.statusPembimbing.setText(model.getStatusPembimbing());
+        holder.statusPembimbing.setText(String.valueOf(kuota));
 
+        //Actions
+        holder.addToClick(konsultan);
     }
 
     @Override
@@ -67,22 +79,21 @@ public class List_Pembimbing_RecycleView extends RecyclerView.Adapter<List_Pembi
         TextView namaPembimbing, statusPembimbing, namaPembimbing_dialog;
         Button jadwal_oke;
         RadioGroup radioGroup;
+        RadioButton radioJam9, radioJam10, radioJam11, radioJam12, radioJam13, radioJam14, radioJam15, radioJam16;
         String[] showjam;
         Context c1;
         String getText_jamToFirebase;
+        CardView cv_konsultan;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             //Init
             descTheComponent(itemView);
-
-            //Actions
-            addToClick(itemView);
         }
 
-        private void addToClick(View itemView) {
-            itemView.setOnClickListener(new View.OnClickListener() {
+        private void addToClick(final Konsultan konsultan) {
+            cv_konsultan.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     //Custom Dialog
@@ -94,14 +105,14 @@ public class List_Pembimbing_RecycleView extends RecyclerView.Adapter<List_Pembi
                     descTheComponent_dialog(dialog);
 
                     //Set Radio Button
-                    setRadioButton();
+                    setRadioButton(konsultan);
 
                     //set to Dialog
-                    namaPembimbing_dialog.setText(nama_pembimbing);
+                    namaPembimbing_dialog.setText(konsultan.getInformasi().getNama());
                     jadwal_oke.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            sendTheData();
+                            sendTheData(konsultan);
                             dialog.dismiss();
 
                         }
@@ -111,14 +122,15 @@ public class List_Pembimbing_RecycleView extends RecyclerView.Adapter<List_Pembi
             });
         }
 
-        private void sendTheData(){
+        private void sendTheData(Konsultan konsultan){
             Bundle bundle = new Bundle();
 
+            bundle.putString("id_konsultan", konsultan.getId_konsultan());
             bundle.putString("jam", getGetShowText_jam);
-            bundle.putString("tanggal", tanggal);
-            bundle.putString("pembimbing", nama_pembimbing);
-            bundle.putInt("bagian_final", bagian);
-            bundle.putInt("subbidang_final", subbidang);
+            bundle.putString("tanggal", konsultan.getJadwal().getTanggal());
+            bundle.putString("pembimbing", konsultan.getInformasi().getNama());
+            bundle.putString("bagian_final", konsultan.getInformasi().getBagian());
+            bundle.putString("subbidang_final", konsultan.getInformasi().getSubbidang());
 
             BookingHere bookingHere =  new BookingHere();
             bookingHere.setArguments(bundle);
@@ -129,7 +141,79 @@ public class List_Pembimbing_RecycleView extends RecyclerView.Adapter<List_Pembi
                     .commit();
         }
 
-        private void setRadioButton() {
+        private void setRadioButton(Konsultan konsultan) {
+            //disable for radiobutton konsultan
+            for(int i=0; i<8; i++){
+                if(i == 0){
+                    if(9 < konsultan.getJadwal().getJadwal_awal() || 10 > konsultan.getJadwal().getJadwal_akhir()){
+                        radioJam9.setEnabled(false);
+                    }
+                }
+                else if(i == 1){
+                    if(10 < konsultan.getJadwal().getJadwal_awal() || 11 > konsultan.getJadwal().getJadwal_akhir()){
+                        radioJam10.setEnabled(false);
+                    }
+                }
+                else if(i == 2){
+                    if(11 < konsultan.getJadwal().getJadwal_awal() || 12 > konsultan.getJadwal().getJadwal_akhir()){
+                        radioJam11.setEnabled(false);
+                    }
+                }
+                else if(i == 3){
+                    if(12 < konsultan.getJadwal().getJadwal_awal() || 13 > konsultan.getJadwal().getJadwal_akhir()){
+                        radioJam12.setEnabled(false);
+                    }
+                }
+                else if(i == 4){
+                    if(13 < konsultan.getJadwal().getJadwal_awal() || 14 > konsultan.getJadwal().getJadwal_akhir()){
+                        radioJam13.setEnabled(false);
+                    }
+                }
+                else if(i == 5){
+                    if(14 < konsultan.getJadwal().getJadwal_awal() || 15 > konsultan.getJadwal().getJadwal_akhir()){
+                        radioJam14.setEnabled(false);
+                    }
+                }
+                else if(i == 6){
+                    if(15 < konsultan.getJadwal().getJadwal_awal() || 16 > konsultan.getJadwal().getJadwal_akhir()){
+                        radioJam15.setEnabled(false);
+                    }
+                }
+                else if(i == 7){
+                    if(16 < konsultan.getJadwal().getJadwal_awal() || 17 > konsultan.getJadwal().getJadwal_akhir()){
+                        radioJam16.setEnabled(false);
+                    }
+                }
+            }
+
+            //disable for radiobutton transaksi
+            for(int i=0; i<sesi_list.size(); i++){
+                if(sesi_list.get(i).equals("09.00 s/d 10.00")){
+                    radioJam9.setEnabled(false);
+                }
+                else if(sesi_list.get(i).equals("10.00 s/d 11.00")){
+                    radioJam10.setEnabled(false);
+                }
+                else if(sesi_list.get(i).equals("11.00 s/d 12.00")){
+                    radioJam11.setEnabled(false);
+                }
+                else if(sesi_list.get(i).equals("12.00 s/d 13.00")){
+                    radioJam12.setEnabled(false);
+                }
+                else if(sesi_list.get(i).equals("13.00 s/d 14.00")){
+                    radioJam13.setEnabled(false);
+                }
+                else if(sesi_list.get(i).equals("14.00 s/d 15.00")){
+                    radioJam14.setEnabled(false);
+                }
+                else if(sesi_list.get(i).equals("15.00 s/d 16.00")){
+                    radioJam15.setEnabled(false);
+                }
+                else if(sesi_list.get(i).equals("16.00 s/d 17.00")){
+                    radioJam16.setEnabled(false);
+                }
+            }
+
             radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup radioGroup, int i) {
@@ -164,7 +248,7 @@ public class List_Pembimbing_RecycleView extends RecyclerView.Adapter<List_Pembi
                             break;
                         case R.id.rbtn_jam16:
                             getText_jamToFirebase = showjam[7];
-                            getGetShowText_jam = "17.00 s/d 18.00";
+                            getGetShowText_jam = "16.00 s/d 17.00";
                             break;
                     }
                 }
@@ -180,10 +264,21 @@ public class List_Pembimbing_RecycleView extends RecyclerView.Adapter<List_Pembi
 
             //RadioGroup
             radioGroup = dialog.findViewById(R.id.radiogroup);
+
+            //RadioButton
+            radioJam9 = dialog.findViewById(R.id.rbtn_jam9);
+            radioJam10 = dialog.findViewById(R.id.rbtn_jam10);
+            radioJam11 = dialog.findViewById(R.id.rbtn_jam11);
+            radioJam12 = dialog.findViewById(R.id.rbtn_jam12);
+            radioJam13 = dialog.findViewById(R.id.rbtn_jam13);
+            radioJam14 = dialog.findViewById(R.id.rbtn_jam14);
+            radioJam15 = dialog.findViewById(R.id.rbtn_jam15);
+            radioJam16 = dialog.findViewById(R.id.rbtn_jam16);
         }
 
         private void descTheComponent(View itemView) {
             //Cardview
+            cv_konsultan = itemView.findViewById(R.id.cardview_konsultan);
             gambarPembimbing = itemView.findViewById(R.id.image_cardview);
             namaPembimbing = itemView.findViewById(R.id.namapembimbing_cardview);
             statusPembimbing = itemView.findViewById(R.id.status_pembimbing_cardview);
