@@ -2,7 +2,9 @@
     <string name="app_name">WarungSkripsi</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="keterangan">Jadwal Konsultan Tidak Ditemukan</string>
+    <string name="keterangan_lewat">Tanggal Konsultasi Sudah Dilewati</string>
+
     <string-array name="subbidang">
         <item>Pengolahan Citra</item>
         <item>Pengolahan Pola</item>

@@ -4,11 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="10dp">
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -16,34 +15,7 @@
             android:orientation="vertical"
             android:padding="10dp">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Nama Pembimbing"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/nama_pembimbing_customdialog"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Test"
-                android:textSize="11pt" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Tersedia Jam"
-                android:textStyle="bold" />
-
-            <RadioGroup
-                android:id="@+id/radiogroup"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -52,82 +24,116 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:text="Pagi" />
-
-                <RadioButton
-                    android:id="@+id/rbtn_jam9"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="09.00 s/d 10.00" />
-
-                <RadioButton
-                    android:id="@+id/rbtn_jam10"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="10.00 s/d 11.00" />
-
-                <RadioButton
-                    android:id="@+id/rbtn_jam11"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="11.00 s/d 12.00" />
+                    android:text="Nama Pembimbing"
+                    android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/nama_pembimbing_customdialog"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:text="Siang" />
+                    android:text="Test"
+                    android:textSize="11pt" />
+            </LinearLayout>
 
-                <RadioButton
-                    android:id="@+id/rbtn_jam12"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="12.00 s/d 13.00" />
-
-                <RadioButton
-                    android:id="@+id/rbtn_jam13"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="13.00 s/d 14.00" />
-
-                <RadioButton
-                    android:id="@+id/rbtn_jam14"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="14.00 s/d 15.00" />
-
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:text="Sore" />
-
-                <RadioButton
-                    android:id="@+id/rbtn_jam15"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="15.00 s/d 16.00" />
-
-                <RadioButton
-                    android:id="@+id/rbtn_jam16"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="16.00 s/d 17.00" />
-
-            </RadioGroup>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:id="@+id/btn_booking_ok"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Pesan Sekarang" />
+                android:padding="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Tersedia Jam"
+                    android:textStyle="bold" />
+
+                <RadioGroup
+                    android:id="@+id/radiogroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:text="Pagi" />
+
+                    <RadioButton
+                        android:id="@+id/rbtn_jam9"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="09.00 s/d 10.00" />
+
+                    <RadioButton
+                        android:id="@+id/rbtn_jam10"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="10.00 s/d 11.00" />
+
+                    <RadioButton
+                        android:id="@+id/rbtn_jam11"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="11.00 s/d 12.00" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:text="Siang" />
+
+                    <RadioButton
+                        android:id="@+id/rbtn_jam12"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="12.00 s/d 13.00" />
+
+                    <RadioButton
+                        android:id="@+id/rbtn_jam13"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="13.00 s/d 14.00" />
+
+                    <RadioButton
+                        android:id="@+id/rbtn_jam14"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="14.00 s/d 15.00" />
+
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:text="Sore" />
+
+                    <RadioButton
+                        android:id="@+id/rbtn_jam15"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="15.00 s/d 16.00" />
+
+                    <RadioButton
+                        android:id="@+id/rbtn_jam16"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="16.00 s/d 17.00" />
+
+                </RadioGroup>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/btn_booking_ok"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Pesan Sekarang" />
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
+    </ScrollView>
 </LinearLayout>

@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "367833683941",
+    "firebase_url": "https://warungskripsi-e88d6.firebaseio.com",
+    "project_id": "warungskripsi-e88d6",
+    "storage_bucket": "warungskripsi-e88d6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:367833683941:android:e3368b9cec4c14ce",
+        "android_client_info": {
+          "package_name": "com.digitalcreative.warungskripsi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "367833683941-puentoleludps16iqsp9pavt8vllg2d0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.digitalcreative.warungskripsi",
+            "certificate_hash": "3d2d637db19c48e7569e8fb0bfd4db856ff439a8"
+          }
+        },
+        {
+          "client_id": "367833683941-gc7rduandeioah68t5148jl9f2tr16k0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8WgkKM-webTZOSEK62OCcl8TQKO8CRlo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "367833683941-gc7rduandeioah68t5148jl9f2tr16k0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
