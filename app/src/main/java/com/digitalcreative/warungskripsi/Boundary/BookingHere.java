@@ -1,6 +1,5 @@
 package com.digitalcreative.warungskripsi.Boundary;
 
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -15,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.digitalcreative.warungskripsi.Controllers.s.Animations.ExpandCollapse;
 import com.digitalcreative.warungskripsi.ModelData.Transaksi;
 import com.digitalcreative.warungskripsi.R;
 import com.google.firebase.database.DataSnapshot;
@@ -33,13 +33,15 @@ import java.util.Date;
  */
 public class BookingHere extends Fragment {
     DatabaseReference traxRef;
-    LinearLayout linearLayout, expand_linear;
-    TextView tv_changetime, jam_view, nama_pembimbing;
+    LinearLayout linearLayout, expand_linear, jadwal_expandview, jadwal_detail_expand;
+    TextView tv_changetime, jam_view, nama_pembimbing, jadwalkonsultasi, tanggal_pesan, tampilkan;
     EditText def_detail_skripsi;
     Spinner sp_subbidang, sp_bagian;
     Button btnKonfirmasi;
-    String detail_skripsi_s, getPembimbing, getTanggal, getJam, getSubbidang, getBagian, getIdKonsultan;
+    String detail_skripsi_s, getPembimbing, getTanggal, getJam, getSubbidang, getBagian, getIdKonsultan, jadwalkonsultasi_ada = "tidak";
     int subbidangs, bagians;
+
+    ExpandCollapse animation;
 
     public BookingHere() {
         // Required empty public constructor
@@ -55,6 +57,9 @@ public class BookingHere extends Fragment {
         //Init
         descTheComponent(view);
 
+        //SetValue
+        jadwal_detail_expand.setVisibility(View.GONE);
+
         //getValue
         goWithit();
 
@@ -65,7 +70,48 @@ public class BookingHere extends Fragment {
                 callFragment_Calender();
             }
         });
-
+            if (jadwalkonsultasi_ada.contains("ada")){
+                jadwal_expandview.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (jadwal_detail_expand.isShown()){
+                            animation.collapse(jadwal_detail_expand);
+                            jadwal_detail_expand.setVisibility(View.VISIBLE);
+                            tampilkan.setText("Lihat Detail");
+                            tampilkan.setClickable(false);
+                        } else {
+                            animation.expand(jadwal_detail_expand);
+                            jadwal_detail_expand.setVisibility(View.VISIBLE);
+                            tampilkan.setText("Lihat Riwayat");
+                            tampilkan.setClickable(true);
+                            tampilkan.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                                    fragmentTransaction.replace(R.id.container, new Riwayat_Booking())
+                                            .addToBackStack(null)
+                                            .commit();
+                                }
+                            });
+                        }
+                    }
+                });
+            } else {
+                jadwalkonsultasi.setText("Tidak Ada Jadwal Konsultasi");
+                jadwal_detail_expand.setVisibility(View.GONE);
+                tanggal_pesan.setVisibility(View.GONE);
+                tampilkan.setText("Lihat Riwayat");
+                tampilkan.setClickable(true);
+                tampilkan.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.container, new Riwayat_Booking())
+                                .addToBackStack(null)
+                                .commit();
+                    }
+                });
+            }
         goKonfirmasi();
         return view;
     }
@@ -115,11 +161,16 @@ public class BookingHere extends Fragment {
         tv_changetime = view.findViewById(R.id.change_time);
         jam_view = view.findViewById(R.id.jadwal_jam_expandview);
         nama_pembimbing = view.findViewById(R.id.nama_pembimbing_expandview);
+        jadwalkonsultasi = view.findViewById(R.id.textview_konsultasi);
+        tanggal_pesan = view.findViewById(R.id.tanggal_pesan);
+        tampilkan = view.findViewById(R.id.tampilkan);
 
         //LinearLayout
         linearLayout = view.findViewById(R.id.layoutthis);
         linearLayout.setClickable(true);
         expand_linear = view.findViewById(R.id.expand_view);
+        jadwal_expandview = view.findViewById(R.id.collipse_show);
+        jadwal_detail_expand = view.findViewById(R.id.text_collispe_detail);
 
         //Spinner
         sp_bagian = view.findViewById(R.id.spinner_bagian);
@@ -127,6 +178,9 @@ public class BookingHere extends Fragment {
 
         //Editext
         def_detail_skripsi = view.findViewById(R.id.detail_skripsi);
+
+        //Animasi
+        animation =  new ExpandCollapse();
     }
 
     private void goWithit() {

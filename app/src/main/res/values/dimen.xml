@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="booking_Pesanan_anda">10pt</dimen>
+    <dimen name="booking_TextSize_Tampilkansemua">7pt</dimen>
+    <dimen name="booking_margin_pesanan">12dp</dimen>
+    <dimen name="booking_Padding_pesankonsultasi">3dp</dimen>
+</resources>

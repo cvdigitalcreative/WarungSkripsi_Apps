@@ -129,6 +129,8 @@
                 android:layout_height="wrap_content">
 
                 <Button
+                    android:textColor="#fff"
+                    android:background="@color/colorPrimary"
                     android:id="@+id/btn_booking_ok"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
