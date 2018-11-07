@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.digitalcreative.warungskripsi.Boundary.BookingHere;
+import com.digitalcreative.warungskripsi.Boundary.Page_Login;
 
 public class BaseActivity extends AppCompatActivity {
 

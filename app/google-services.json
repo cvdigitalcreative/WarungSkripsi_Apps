@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "367833683941-kum2t21uc6ddkmckgn3vi43ibm8kdafg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.digitalcreative.warungskripsi",
+            "certificate_hash": "e9808507080cd380e4115c06e3314f68ab171046"
+          }
+        },
+        {
           "client_id": "367833683941-gc7rduandeioah68t5148jl9f2tr16k0.apps.googleusercontent.com",
           "client_type": 3
         }
