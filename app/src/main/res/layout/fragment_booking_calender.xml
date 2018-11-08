@@ -288,15 +288,25 @@
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
 
                             <Button
                                 android:background="@color/colorPrimary"
                                 android:id="@+id/btn_konfirmasi"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_marginBottom="10dp"
                                 android:textColor="#fff"
                                 android:text="Konfirmasi" />
+
+                            <Button
+                                android:background="@android:color/holo_red_dark"
+                                android:id="@+id/btn_keluar"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:textColor="#fff"
+                                android:text="Sign out" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>

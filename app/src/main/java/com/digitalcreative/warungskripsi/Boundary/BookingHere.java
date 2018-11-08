@@ -1,5 +1,6 @@
 package com.digitalcreative.warungskripsi.Boundary;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -14,9 +15,11 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.digitalcreative.warungskripsi.BaseActivity;
 import com.digitalcreative.warungskripsi.Controllers.s.Animations.ExpandCollapse;
 import com.digitalcreative.warungskripsi.ModelData.Transaksi;
 import com.digitalcreative.warungskripsi.R;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,13 +35,14 @@ import java.util.Date;
  * A simple {@link Fragment} subclass.
  */
 public class BookingHere extends Fragment {
+    FirebaseAuth firebaseAuth;
     DatabaseReference traxRef;
     LinearLayout linearLayout, expand_linear, jadwal_expandview, jadwal_detail_expand;
     TextView tv_changetime, jam_view, nama_pembimbing, jadwalkonsultasi, tanggal_pesan, tampilkan;
     EditText def_detail_skripsi;
     Spinner sp_subbidang, sp_bagian;
-    Button btnKonfirmasi;
-    String detail_skripsi_s, getPembimbing, getTanggal, getJam, getSubbidang, getBagian, getIdKonsultan, jadwalkonsultasi_ada = "tidak";
+    Button btnKonfirmasi, btnSignOut;
+    String detail_skripsi_s, getPembimbing, getTanggal, getJam, getSubbidang, getBagian, getIdKonsultan, getIdMahasiswa, jadwalkonsultasi_ada = "tidak";
     int subbidangs, bagians;
 
     ExpandCollapse animation;
@@ -87,10 +91,23 @@ public class BookingHere extends Fragment {
                             tampilkan.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                                    fragmentTransaction.replace(R.id.container, new Riwayat_Booking())
-                                            .addToBackStack(null)
-                                            .commit();
+                                    try {
+                                        getIdMahasiswa = getArguments().getString("id_mahasiswa");
+
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("id_mahasiswa", getIdMahasiswa);
+
+                                        Riwayat_Booking getData = new Riwayat_Booking();
+                                        getData.setArguments(bundle);
+
+                                        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                                        fragmentTransaction.replace(R.id.container, getData)
+                                                .addToBackStack(null)
+                                                .commit();
+
+                                    } catch (Exception e) {
+                                        System.out.println("Konfirmasi Gagal");
+                                    }
                                 }
                             });
                         }
@@ -105,15 +122,43 @@ public class BookingHere extends Fragment {
                 tampilkan.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                        fragmentTransaction.replace(R.id.container, new Riwayat_Booking())
-                                .addToBackStack(null)
-                                .commit();
+                        try {
+                            getIdMahasiswa = getArguments().getString("id_mahasiswa");
+
+                            Bundle bundle = new Bundle();
+                            bundle.putString("id_mahasiswa", getIdMahasiswa);
+
+                            Riwayat_Booking getData = new Riwayat_Booking();
+                            getData.setArguments(bundle);
+
+                            FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                            fragmentTransaction.replace(R.id.container, getData)
+                                    .addToBackStack(null)
+                                    .commit();
+
+                        } catch (Exception e) {
+                            System.out.println("Data akun tidak ada");
+                        }
                     }
                 });
             }
+
         goKonfirmasi();
+        goSignOut();
+
         return view;
+    }
+
+    private void goSignOut(){
+        btnSignOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firebaseAuth.signOut();
+
+                Intent intent = new Intent(getActivity(), BaseActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void goKonfirmasi() {
@@ -122,6 +167,7 @@ public class BookingHere extends Fragment {
             public void onClick(View v) {
                 //getBundle
                 try {
+                    getIdMahasiswa = getArguments().getString("id_mahasiswa");
                     getIdKonsultan = getArguments().getString("id_konsultan");
                     getSubbidang = getArguments().getString("subbidang_final");
                     getBagian = getArguments().getString("bagian_final");
@@ -137,14 +183,13 @@ public class BookingHere extends Fragment {
                         System.out.println("Id Konsultan : "+getIdKonsultan);
                         Transaksi transaksi = new Transaksi();
                         transaksi.setId_konsultasi(getIdKonsultan);
-                        transaksi.setId_mahasiswa("m-1");
+                        transaksi.setId_mahasiswa(getIdMahasiswa);
                         transaksi.setTanggal(getTanggal);
                         transaksi.setSesi(getJam);
 
                         traxRef.child("transaksi").child(key).setValue(transaksi);
                         traxRef.child("konsultan").child(getIdKonsultan).child("histori_trax").child(getTanggal).child("id_trax").setValue(key);
-                        traxRef.child("mahasiswa").child("m-1").child("histori_trax").child(getTanggal).child("id_trax").setValue(key);
-
+                        traxRef.child("mahasiswa").child(getIdMahasiswa).child("histori_trax").child(getTanggal).child("id_trax").setValue(key);
                     }
 
                 } catch (Exception e) {
@@ -158,6 +203,7 @@ public class BookingHere extends Fragment {
     private void descTheComponent(View view) {
         //TextView
         btnKonfirmasi = view.findViewById(R.id.btn_konfirmasi);
+        btnSignOut = view.findViewById(R.id.btn_keluar);
         tv_changetime = view.findViewById(R.id.change_time);
         jam_view = view.findViewById(R.id.jadwal_jam_expandview);
         nama_pembimbing = view.findViewById(R.id.nama_pembimbing_expandview);
@@ -178,6 +224,9 @@ public class BookingHere extends Fragment {
 
         //Editext
         def_detail_skripsi = view.findViewById(R.id.detail_skripsi);
+
+        //Firebase Auth
+        firebaseAuth = FirebaseAuth.getInstance();
 
         //Animasi
         animation =  new ExpandCollapse();

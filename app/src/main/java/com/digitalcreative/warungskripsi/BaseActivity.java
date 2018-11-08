@@ -15,10 +15,9 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Fragment fragment =  new BookingHere();
+        Page_Login fragment =  new Page_Login();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.container, fragment)
-                .commit();
+        ft.add(R.id.container, fragment).commit();
 
     }
 }
